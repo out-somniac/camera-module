@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder, Quality
 
