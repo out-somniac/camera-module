@@ -20,7 +20,8 @@ class Camera():
     def stopRecording(self):
         self._camera.stop_recording()
 
-    def pollCurrent(self):
+    # Returns numpy array that represents the RGBA values
+    def getFrame(self):
         request = self._camera.capture_request()
         result = request.make_array("main")
         request.release()
