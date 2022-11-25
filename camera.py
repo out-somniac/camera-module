@@ -32,6 +32,18 @@ class Camera():
     def getMetadata(self):
         return self._camera.capture_metadata()
 
+    def getMainFormat(self):
+        return self._configuration['main']['format']
+
+    def getBackupFormat(self):
+        return self._configuration['lores']['format']
+
+    def getMainResolution(self):
+        return self._configuration['main']['size']
+
+    def getBackupResolution(self):
+        return self._configuration['lores']['size']
+
     def __createConfig(self, main_resolution, backup_resolution):
         # This configures the camera so that the backup stream with backup_resolution can be recorded,
         # but at any point a still image of resolution main_resolution can be taken.
