@@ -1,5 +1,5 @@
 import cv2
 
 
-def saveImage(filepath, image):
+def save_image(filepath, image):
     cv2.imwrite(filepath, image)
