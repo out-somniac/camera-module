@@ -55,9 +55,3 @@ class Camera():
             raise ValueError("Given resolution is too large!")
         elif resolution[0] < 64 or resolution[1] < 64:
             raise ValueError("Given resolution is too small!")
-
-    def get_main_resolution(self):
-        return self._main_resolution
-
-    def get_backup_resolution(self):
-        return self._backup_resolution
