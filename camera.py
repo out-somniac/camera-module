@@ -1,38 +1,23 @@
 from picamera2 import Picamera2
 from picamera2.encoders import H264Encoder, Quality
 
-from threading import Lock
-
 
 class Camera():
-    # Note that the Camera is a thread safe Singleton. This prevents Picamera2 from being initialized twice.
-    _instance = None
-    _lock: Lock = Lock()
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance == None:
-            with cls._lock():
-                if cls._instance == None:
-                    cls._instance = super().__new__(
-                        cls, *args, **kwargs)
-        return cls._instance
-
     def __init__(self, main_resolution, backup_resolution):
         self._camera = Picamera2()
 
-        self.verifyResolution(main_resolution)
-        self.verifyResolution(backup_resolution)
+        self.__verifyResolution(main_resolution)
+        self.__verifyResolution(backup_resolution)
 
         self._configuration = self.__createConfig(
             main_resolution, backup_resolution)
         self._camera.configure(self._configuration)
-        # TODO: Add other encoders. For example the null encored to capture raw data
         self._encoder = H264Encoder()
 
-    def startBackupRecording(self, filepath):
-        self._camera.start_recording(self._encoder, filepath, Quality.MEDIUM)
+    def startRecording(self, filepath):
+        self._camera.start_recording(self._encoder, filepath)
 
-    def stop(self):
+    def stopRecording(self):
         self._camera.stop_recording()
 
     def pollCurrent(self):
@@ -40,9 +25,6 @@ class Camera():
         result = request.make_array("main")
         request.release()
         return result
-
-    def is_running(self):
-        return self._camera.started
 
     def __createConfig(self, main_resolution, backup_resolution):
         # This configures the camera so that the backup stream with backup_resolution can be recorded,
