@@ -6,49 +6,49 @@ class Camera():
     def __init__(self, main_resolution, backup_resolution):
         self._camera = Picamera2()
 
-        self.__verifyResolution(main_resolution)
-        self.__verifyResolution(backup_resolution)
+        self.__verify_resolution(main_resolution)
+        self.__verify_resolution(backup_resolution)
 
-        self._configuration = self.__createConfig(
+        self._configuration = self.__create_config(
             main_resolution, backup_resolution)
         self._camera.configure(self._configuration)
         self._encoder = H264Encoder()
 
-    def startRecording(self, filepath):
+    def start_recording(self, filepath):
         self._camera.start_recording(self._encoder, filepath)
 
-    def stopRecording(self):
+    def stop_recording(self):
         self._camera.stop_recording()
 
     # Returns numpy array that represents the RGBA values
-    def getFrame(self):
+    def get_frame(self):
         request = self._camera.capture_request()
         result = request.make_array("main")
         request.release()
         return result
 
-    def getMetadata(self):
+    def get_metadata(self):
         return self._camera.capture_metadata()
 
-    def getMainFormat(self):
+    def get_main_format(self):
         return self._configuration['main']['format']
 
-    def getBackupFormat(self):
+    def get_backup_format(self):
         return self._configuration['lores']['format']
 
-    def getMainResolution(self):
+    def get_main_resolution(self):
         return self._configuration['main']['size']
 
-    def getBackupResolution(self):
+    def get_backup_resolution(self):
         return self._configuration['lores']['size']
 
-    def __createConfig(self, main_resolution, backup_resolution):
-        # This configures the camera so that the backup stream with backup_resolution can be recorded,
-        # but at any point a still image of resolution main_resolution can be taken.
+    def __create_cconfig(self, main_resolution, backup_resolution):
+        """ This configures the camera so that the backup stream with backup_resolution can be recorded, 
+        but at any point a still image of resolution main_resolution can be taken. """
         return self._camera.create_video_configuration(
             {"size": main_resolution}, {"size": backup_resolution}, encode="lores")
 
-    def __verifyResolution(self, resolution):
+    def __verify_resolution(self, resolution):
         if resolution[0] > self._camera.sensor_resolution[0] or resolution[1] > self._camera.sensor_resolution[1]:
             raise ValueError("Given resolution is too large!")
         elif resolution[0] < 64 or resolution[1] < 64:
