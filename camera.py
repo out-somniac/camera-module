@@ -6,6 +6,9 @@ class Camera():
     def __init__(self, main_resolution, backup_resolution):
         self._camera = Picamera2()
 
+        self._main_resolution = main_resolution
+        self._backup_resolution = backup_resolution
+
         self.__verifyResolution(main_resolution)
         self.__verifyResolution(backup_resolution)
 
@@ -26,6 +29,9 @@ class Camera():
         request.release()
         return result
 
+    def getMetadata(self):
+        return self._camera.capture_metadata()
+
     def __createConfig(self, main_resolution, backup_resolution):
         # This configures the camera so that the backup stream with backup_resolution can be recorded,
         # but at any point a still image of resolution main_resolution can be taken.
@@ -37,3 +43,9 @@ class Camera():
             raise ValueError("Given resolution is too large!")
         elif resolution[0] < 64 or resolution[1] < 64:
             raise ValueError("Given resolution is too small!")
+
+    def get_main_resolution(self):
+        return self._main_resolution
+
+    def get_backup_resolution(self):
+        return self._backup_resolution
