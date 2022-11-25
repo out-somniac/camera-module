@@ -6,9 +6,6 @@ class Camera():
     def __init__(self, main_resolution, backup_resolution):
         self._camera = Picamera2()
 
-        self._main_resolution = main_resolution
-        self._backup_resolution = backup_resolution
-
         self.__verifyResolution(main_resolution)
         self.__verifyResolution(backup_resolution)
 
